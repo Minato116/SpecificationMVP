@@ -101,15 +101,13 @@ const SignUp = () => {
           <div className="col-lg-12 col-xl-11">
             <div className="card text-black" style={{ borderRadius: "25px" }}>
               <div className="card-body p-md-5">
-                <div className="row justify-content-center">
-                  <Link to="/login" style={{ position: "absolute", top: "30px", left: "30px", width: "42px" }}>
-                    <i className="fa fa-arrow-left fa-3x text-secondary"></i>
-                  </Link>
+                <div className="row justify-content-center">                  
                   <p className="text-center h1 fw-bold mb-3 mx-1 mx-md-4 mt-2 text-secondary">
                     Sign up
                   </p>
+                  <hr className="mb-4" />
                   <div className="col-md-10 col-lg-6 col-xl-6 order-2 order-lg-2 h-full">
-                    <form className="mx-1 mx-md-4">
+                    <form className=" shadow-none mx-1 mx-md-4">
                       <div className="d-flex flex-row align-items-center mb-4">
                         <i className="fas fa-user fa-2x me-3 fa-fw text-secondary"></i>
                         <div
@@ -154,7 +152,7 @@ const SignUp = () => {
                             type="name"
                             name="lastName"
                             className="form-control"
-                            placeholder="Enter Middle Name"
+                            placeholder="Enter Last Name"
                             value={formData.lastName}
                             onChange={handleChange}
                           />
@@ -232,7 +230,7 @@ const SignUp = () => {
                     </form>
                   </div>
                   <div className="col-md-10 col-lg-6 col-xl-6 order-1 order-lg-2">
-                    <form className="mx-1 mx-md-4">
+                    <form className="shadow-none mx-1 mx-md-4">
                       <div className="d-flex flex-row align-items-center mb-4">
                         <i className="fas fa-calendar fa-2x me-3 fa-fw text-secondary"></i>
                         <div data-mdb-input-init className="form-outline flex-fill mb-0">
@@ -351,7 +349,7 @@ const SignUp = () => {
                   </div>
 
                 </div>
-                <div className="d-flex justify-content-center mx-4 mb-1 mb-lg-4">
+                <div className="d-flex justify-content-center mx-4 mb-1 mb-lg-4 mt-5">
                   <button
                     type="button"
                     data-mdb-button-init
@@ -362,6 +360,11 @@ const SignUp = () => {
                     Register
                   </button>
                   {isLoading && <Loader />}
+                </div>
+                <div className="text-center">
+                <Link to="/login" >
+                    Already have an account?
+                  </Link>                  
                 </div>
               </div>
             </div>

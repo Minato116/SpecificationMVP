@@ -65,7 +65,7 @@ const ForgotPassword = () => {
                           <input
                             type="password"
                             id="password"
-                            placeholder="Enter password"
+                            placeholder="Conform New password"
                             className="form-control form-control-lg"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
