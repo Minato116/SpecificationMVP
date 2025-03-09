@@ -51,7 +51,7 @@ const SignUp = () => {
     if (!formData.dateOfJoining) newErrors.dateOfJoining = 'Date of Joining is required';
     if (!formData.keySkills.trim()) newErrors.keySkills = 'Key Skills are required';
     if (!formData.education.trim()) newErrors.education = 'Education details are required';
-    if (!formData.certifications.trim()) newErrors.certifications = 'Certifications are required';
+    // if (!formData.certifications.trim()) newErrors.certifications = 'Certifications are required';
     return newErrors;
   };
   const signupHandler = async (e) => {
@@ -108,8 +108,7 @@ const SignUp = () => {
                   <p className="text-center h1 fw-bold mb-3 mx-1 mx-md-4 mt-2 text-secondary">
                     Sign up
                   </p>
-                  <div className="col-md-10 col-lg-6 col-xl-6 order-2 order-lg-2">
-
+                  <div className="col-md-10 col-lg-6 col-xl-6 order-2 order-lg-2 h-full">
                     <form className="mx-1 mx-md-4">
                       <div className="d-flex flex-row align-items-center mb-4">
                         <i className="fas fa-user fa-2x me-3 fa-fw text-secondary"></i>
