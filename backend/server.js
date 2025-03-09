@@ -12,10 +12,12 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
 connectDB(); // MongoDB connect
 
+const cors = require("cors");
 const port = process.env.PORT || 5001;
 const app = express();
 
 // Body parser middleware
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
