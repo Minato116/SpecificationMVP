@@ -13,11 +13,11 @@ import AnswerModal from './AnswerModal';
 // Register required Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
 
-const Report = ({ score, totalQuestions, onRestart, categorizedResults, questions }) => {
+const Report = ({ score, totalQuestions, onRestart, categorizedResults, questions, clickAnswer }) => {
   const [showModal, setShowModal] = useState(false);
 
   const percentage = Math.round((score / totalQuestions) * 100);
-
+// console.log( onRestart, categorizedResults, questions)
   // Result message logic
   let resultMessage;
   if (percentage >= 90) {
@@ -37,9 +37,10 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
       {
         label: 'Quiz Results',
         data: [score, totalQuestions - score],
-        backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
-        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
-        borderWidth: 1
+        backgroundColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 0.6)'],
+        borderColor: ['rgba(100, 100, 100, 0.2)', 'rgba(100, 100, 100, 1)'],
+        borderWidth: 1,
+        size : "60px"
       }
     ]
   };
@@ -82,6 +83,7 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
   const categorizedAnswers = questions.reduce((acc, question, index) => {
     const type = question.type;
     const selectedOption = categorizedResults[type] && categorizedResults[type] > 0 ? question.content.find(option => option === question.answer) : 'N/A';
+
     if (!acc[type]) acc[type] = [];
     acc[type].push({ index, selectedOption });
     return acc;
@@ -100,9 +102,9 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
         <div className="card-text mb-4">{resultMessage}</div>
 
         {/* Pie Chart */}
-        {/* <div className="my-4" style={{ maxWidth: '400px', margin: '0 auto' }}>
+        <div className="my-4" style={{ maxWidth: '400px', margin: '0 auto' }}>
           <Pie data={chartData} options={chartOptions} />
-        </div> */}
+        </div>
 
         {/* Category Results */}
         {categoryResults.length > 0 && (
@@ -128,6 +130,7 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
         onClose={() => setShowModal(false)}
         questions={questions}
         categorizedAnswers={categorizedAnswers}
+        clickAnswer = {clickAnswer}
       />
     </div>
   );

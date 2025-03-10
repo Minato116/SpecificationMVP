@@ -29,7 +29,6 @@ const QuizScreen = () => {
           try {
             setIsLoading(true);
             const data = await getQuestions();
-            console.log(data[0]);
             setQuestions(data);
             setIsLoading(false);
           } catch (err) {
@@ -48,6 +47,7 @@ const QuizScreen = () => {
             ...selectedOptions,
             [currentQuestionIndex]: option
         });
+        console.log(selectedOption)
     };
 
     const handleNextQuestion = () => {
@@ -113,7 +113,7 @@ const QuizScreen = () => {
     }
 
     if (quizCompleted && results) {
-        return <Report score={results.score} questions={questions} totalQuestions={results.totalQuestions} onRestart={restartQuiz} categorizedResults={results.categorizedResults} />;
+        return <Report score={results.score} questions={questions} totalQuestions={results.totalQuestions} onRestart={restartQuiz} categorizedResults={results.categorizedResults} clickAnswer={selectedOptions} />;
     }
 
     const progress = ((currentQuestionIndex+1) / questions.length) * 100;
