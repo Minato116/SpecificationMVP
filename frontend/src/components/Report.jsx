@@ -81,7 +81,7 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
   // Create an object to store the detailed answers by category
   const categorizedAnswers = questions.reduce((acc, question, index) => {
     const type = question.type;
-    const selectedOption = categorizedResults[type] && categorizedResults[type] > 0 ? question.contents.find(option => option === question.answer) : 'N/A';
+    const selectedOption = categorizedResults[type] && categorizedResults[type] > 0 ? question.content.find(option => option === question.answer) : 'N/A';
     if (!acc[type]) acc[type] = [];
     acc[type].push({ index, selectedOption });
     return acc;
