@@ -8,11 +8,12 @@ import connectDB from './config/db.js'
 import userRoutes from './routes/userRoutes.js'
 import projectRoutes from './routes/projectRoutes.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
-
+import cors from 'cors';
+// import express from 'express';
 
 connectDB(); // MongoDB connect
 
-const cors = require("cors");
+// const cors = require("cors");
 const port = process.env.PORT || 5001;
 const app = express();
 
