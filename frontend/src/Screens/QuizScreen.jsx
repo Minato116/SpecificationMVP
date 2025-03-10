@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Report from '../components/Report';
 // import { getQuestions, submitQuiz } from '../services/api';
 import Question from '../components/Question';
-import questionnaire from '../questionnaire';
+// import questionnaire from '../questionnaire';
 import WaveEffect from '../components/WaveEffect';
 
 const QuizScreen = () => {
@@ -14,21 +14,32 @@ const QuizScreen = () => {
     const [quizCompleted, setQuizCompleted] = useState(false);
     const [results, setResults] = useState(null);
 
-    useEffect(() => {
-        // const fetchQuestions = async () => {
-        //   try {
-        //     setIsLoading(true);
-        //     const data = await getQuestions();
-        //     setQuestions(data);
-        //     setIsLoading(false);
-        //   } catch (err) {
-        //     setError('Failed to load questions. Please try again later.');
-        //     setIsLoading(false);
-        //   }
-        // };
+    const getQuestions = async () => {
+        const res = await fetch('/api/quiz');
+        if(res.ok){
+            const data = await res.json();
+            // console.log(data);    
+            return data.data;             
+        }
+        else return [];       
+    }
 
-        // fetchQuestions();
-        setQuestions(questionnaire);
+    useEffect(() => {
+        const fetchQuestions = async () => {
+          try {
+            setIsLoading(true);
+            const data = await getQuestions();
+            console.log(data[0]);
+            setQuestions(data);
+            setIsLoading(false);
+          } catch (err) {
+            setError('Failed to load questions. Please try again later.');
+            setIsLoading(false);
+          }
+        };
+
+        fetchQuestions();
+        // setQuestions(questionnaire);
         setIsLoading(false);
     }, []);
     // console.log("question, option", selectedOptions)
@@ -105,7 +116,7 @@ const QuizScreen = () => {
         return <Report score={results.score} questions={questions} totalQuestions={results.totalQuestions} onRestart={restartQuiz} categorizedResults={results.categorizedResults} />;
     }
 
-    const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+    const progress = ((currentQuestionIndex+1) / questions.length) * 100;
     const currentQuestion = questions[currentQuestionIndex];
     const selectedOption = selectedOptions[currentQuestionIndex];
 
@@ -123,9 +134,11 @@ const QuizScreen = () => {
                             <div className="mb-4">
                                 {/* <h4 className="mb-2">Online Assessment</h4> */}
                                 <div className="progress" style={{ height: "35px" }} data-aos="zoom-out" data-aos-delay="100">
-                                    <div className="progress-bar progress-bar-striped progress-bar-animated fs-4 fw-semibold" role="progressbar" style={{ width: `${progress}%` }} aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100">{`${Math.round(progress)}%`}</div>
+                                    <div className="progress-bar progress-bar-striped progress-bar-animated fs-4 fw-semibold" role="progressbar" style={{ width: `${progress}%` }} aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100">                                        
+                                    </div>                                    
                                 </div>
-                                <div className="text-muted mt-2" data-aos="zoom-in" data-aos-delay="200">
+                                <div className='!important absolute !important top-[-20px] text-center text-black'>{`${Math.round(progress)}%`}</div>
+                                <div className=" text-muted mt-2" data-aos="zoom-in" data-aos-delay="200">
                                     Question {currentQuestionIndex + 1} of {questions.length}
                                 </div>
                             </div>
