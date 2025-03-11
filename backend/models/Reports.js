@@ -3,7 +3,27 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const reportsShema = new Schema({     
+const reportsSchema = new Schema({    
+     fullName:{
+        type:String,
+        required:true
+     },
+     email:{
+        type:String,
+        required:true
+    },
+    gender:{
+        type:String,
+        required:true
+    },
+    education:{
+        type:String,
+        required:true
+    },
+    employmentDetails:{
+        type:String,
+        required:true
+    },
     answers:{
         question:{type:String},
         yourAnswer:{type:String},
@@ -12,5 +32,5 @@ const reportsShema = new Schema({
     type:{type:String}        
 })
 
-const Reports = mongoose.model("Reports", reportsShema);
+const Reports = mongoose.model("Reports", reportsSchema);
 export default Reports;
