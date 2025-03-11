@@ -7,18 +7,16 @@ import {
   CategoryScale,
   LinearScale
 } from 'chart.js';
-import { Pie } from 'react-chartjs-2';
+// import { Pie } from 'react-chartjs-2';
 import AnswerModal from './AnswerModal';
+import CircularWithValueLabel from './CircleChart';
 
 // Register required Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
 
-const Report = ({ score, totalQuestions, onRestart, categorizedResults, questions }) => {
+const Report = ({ score, totalQuestions, onRestart, categorizedResults, questions, clickAnswer, typeNum }) => {
   const [showModal, setShowModal] = useState(false);
-
   const percentage = Math.round((score / totalQuestions) * 100);
-
-  // Result message logic
   let resultMessage;
   if (percentage >= 90) {
     resultMessage = "Excellent! You've mastered these concepts.";
@@ -30,79 +28,68 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
     resultMessage = "You might want to review the material and try again.";
   }
 
-  // Create the chart data
-  const chartData = {
-    labels: ['Correct', 'Incorrect'],
-    datasets: [
-      {
-        label: 'Quiz Results',
-        data: [score, totalQuestions - score],
-        backgroundColor: ['rgba(75, 192, 192, 0.6)', 'rgba(255, 99, 132, 0.6)'],
-        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(255, 99, 132, 1)'],
-        borderWidth: 1
-      }
-    ]
-  };
-
-  // Chart options
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: true,
-    plugins: {
-      legend: {
-        position: 'bottom',
-        labels: {
-          font: {
-            size: 14
-          }
-        }
-      },
-      tooltip: {
-        padding: 10,
-        bodyFont: {
-          size: 14
-        }
-      }
-    }
-  };
-
   // Generate category-specific results
   const categoryResults = categorizedResults
-    ? Object.entries(categorizedResults).map(([type, correct]) => {
-        return (
-          <li key={type} className="list-group-item d-flex justify-content-between align-items-center">
-            {type}
-            <span className="badge bg-primary rounded-pill">{correct}</span>
-          </li>
-        );
-      })
+    ? Object.entries(categorizedResults).map(([type, correct], index) => {
+      let typeResult;
+      typeNum.forEach((val, ind) => {
+        if (type === val._id) {
+          typeResult = Math.floor((Number(correct) / Number(val.count) * 100));
+        }
+      });
+
+      let typeResultMessage = "";
+      if (typeResult >= 90) {
+        typeResultMessage = "Top";
+      } else if (typeResult >= 75) {
+        typeResultMessage = "High";
+      } else if (typeResult >= 50) {
+        typeResultMessage = "Medium";
+      } else if (typeResult >= 30) {
+        typeResultMessage = "Low";
+      } else {
+        typeResultMessage = "Poor";
+      }
+
+      return (
+        <li key={type} className="list-group-item d-flex justify-content-between align-items-center">
+          {type}
+          <div className="badge bg-primary rounded-mx w-10">
+            <span>{typeResult}%</span>
+            <span className='mx-3'>{typeResultMessage}</span>
+          </div>
+        </li>
+      );
+    })
     : [];
 
   // Create an object to store the detailed answers by category
   const categorizedAnswers = questions.reduce((acc, question, index) => {
     const type = question.type;
     const selectedOption = categorizedResults[type] && categorizedResults[type] > 0 ? question.content.find(option => option === question.answer) : 'N/A';
+
     if (!acc[type]) acc[type] = [];
     acc[type].push({ index, selectedOption });
     return acc;
   }, {});
 
+
+    const handlePrint =  () => {
+       window.scrollTo({top:0, behavior: 'smooth'});
+       window.print(); // This triggers the browser's print function
+    };
+  
   return (
-    <div className="card text-center my-5">
-      <div className="card-header bg-primary text-white">
-        <h3 className="mb-0">Quiz Results</h3>
+    <div className="print:hidden card text-center my-5">
+      <div className="card-header bg-primary text-white mb-5">
+        <h3 className="mb-0 p-2">Quiz Results</h3>
       </div>
       <div className="card-body">
         <div className="mb-4">
-          <h1 className="display-1">{percentage}%</h1>
+          <CircularWithValueLabel score={percentage} />
           <p className="lead">You scored {score} out of {totalQuestions}</p>
         </div>
         <div className="card-text mb-4">{resultMessage}</div>
-
-        {/* Pie Chart */}
-        {/* <div className="my-4" style={{ maxWidth: '400px', margin: '0 auto' }}>
-          <Pie data={chartData} options={chartOptions} />
-        </div> */}
 
         {/* Category Results */}
         {categoryResults.length > 0 && (
@@ -113,13 +100,14 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
             </ul>
           </div>
         )}
-
         <button className="btn btn-primary btn-lg mt-4" onClick={() => setShowModal(true)}>
-          See All Answers by Questions
+          Save Report
         </button>
-
-        <button className="btn btn-secondary btn-lg mt-4 ms-3" onClick={onRestart}>
+        <button className="btn btn-primary btn-lg mt-4 ms-3" onClick={onRestart}>
           Take Quiz Again
+        </button>
+        <button className=" btn btn-primary btn-lg mt-4 ms-3" onClick={handlePrint}>
+          Print
         </button>
       </div>
 
@@ -128,6 +116,7 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
         onClose={() => setShowModal(false)}
         questions={questions}
         categorizedAnswers={categorizedAnswers}
+        clickAnswer={clickAnswer}
       />
     </div>
   );

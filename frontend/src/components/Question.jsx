@@ -15,7 +15,6 @@ const Question = ({ question, selectedOption, onSelectOption }) => {
               className={`list-group-item list-group-item-action ${selectedOption === optionLetters[index] ? 'active' : ''}`}
               onClick={() => onSelectOption(optionLetters[index])}
             >         
-            {console.log(optionLetters[4]+"  =  "+typeof(optionLetters[1]))}   
               <strong>{optionLetters[index].toUpperCase()}.</strong> {content}
             </button>
             

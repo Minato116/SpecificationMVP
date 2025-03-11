@@ -13,13 +13,13 @@ const QuizScreen = () => {
     const [error, setError] = useState(null);
     const [quizCompleted, setQuizCompleted] = useState(false);
     const [results, setResults] = useState(null);
+    const [typeNum, setTypeNum] = useState([]);
 
     const getQuestions = async () => {
         const res = await fetch('/api/quiz');
         if(res.ok){
-            const data = await res.json();
-            // console.log(data);    
-            return data.data;             
+            const obj = await res.json();     
+            return obj;             
         }
         else return [];       
     }
@@ -29,8 +29,8 @@ const QuizScreen = () => {
           try {
             setIsLoading(true);
             const data = await getQuestions();
-            console.log(data[0]);
-            setQuestions(data);
+            setQuestions(data.data);
+            setTypeNum( data.typeNum);
             setIsLoading(false);
           } catch (err) {
             setError('Failed to load questions. Please try again later.');
@@ -96,7 +96,7 @@ const QuizScreen = () => {
         });
         setQuizCompleted(true);
     };
-
+ 
     const restartQuiz = () => {
         setCurrentQuestionIndex(0);
         setSelectedOptions({});
@@ -112,8 +112,9 @@ const QuizScreen = () => {
         return <div className="alert alert-danger">{error}</div>;
     }
 
-    if (quizCompleted && results) {
-        return <Report score={results.score} questions={questions} totalQuestions={results.totalQuestions} onRestart={restartQuiz} categorizedResults={results.categorizedResults} />;
+    if (quizCompleted && results) {    
+        // questionNum();  
+        return <Report score={results.score} questions={questions} totalQuestions={results.totalQuestions} onRestart={restartQuiz} categorizedResults={results.categorizedResults} clickAnswer={selectedOptions} typeNum ={typeNum}  />;
     }
 
     const progress = ((currentQuestionIndex+1) / questions.length) * 100;
