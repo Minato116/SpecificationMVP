@@ -6,9 +6,18 @@ export const getAllQuiz = asyncHandler (async (req, res) => {
    
     try {
       const quiz = await Question.find();
+      const typeNum = await Question.aggregate([
+        {
+          $group: {
+            _id: '$type',
+            count: {$sum: 1},
+          }
+        }
+      ]);
+      // console.log(typeNum)
 
     // console.log("Hello, world!");
-      res.status(200).json({data:quiz});
+      res.status(200).json({data:quiz, typeNum: typeNum});
     } catch (error) {
       res.status(400).json({ error: error.message });
     }

@@ -31,8 +31,7 @@ const AnswerModal = ({
                       <div className="w-3/4">
                         <strong>Q: {questions[answer.index].question}</strong>
                         <br />
-                        <span>Your Answer: {clickAnswer[index]}</span>
-                        {console.log ('Answer : ' + answer)}
+                        <span>Your Answer: {clickAnswer[index]}</span>                    
                         <br />
                         <span>
                           Correct Answer: {questions[answer.index].answer}
