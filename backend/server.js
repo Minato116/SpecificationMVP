@@ -8,6 +8,7 @@ import connectDB from './config/db.js';
 import userRoutes from './routes/userRoutes.js';
 import projectRoutes from './routes/projectRoutes.js';
 import quizRoutes from './routes/quizRoutes.js';
+import reportRoutes from './routes/reportRoutes.js'
 import {notFound, errorHandler} from './middleware/errorMiddleware.js';
 import cors from 'cors';
 // import express from 'express';
@@ -36,6 +37,7 @@ app.get ('/', (req, res) => {
 app.use ('/api/users', userRoutes);
 app.use ('/api/project', projectRoutes);
 app.use ('/api/quiz', quizRoutes);
+app.use ('/api/reports', reportRoutes);
 const __dirname = path.resolve ();
 
 if (process.env.NODE_ENV === 'production') {
