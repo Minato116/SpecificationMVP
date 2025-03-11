@@ -7,8 +7,8 @@ import { Link } from 'react-router-dom'
 const Footer = () => {
   return (
     <>
-      <footer className="footer bg-light pb-3">
-        <Wave mask="url(#mask)" fill="rgba(2, 5, 161, 0.91)" style={{position: "relative", bottom: "-100px"}}>
+      <footer className="footer shadow-0 border-0 pb-3">
+        <Wave mask="url(#mask)" fill="#1240EF" style={{position: "relative", bottom: "-100px"}}>
           <defs>
             <linearGradient id="gradient" gradientTransform="rotate(90)">
               <stop offset="0" stopColor="white" />
@@ -19,7 +19,7 @@ const Footer = () => {
                 x="0"
                 y="0"
                 width="2000"
-                height="200"
+                height="300"
                 fill="url(#gradient)"
               />
             </mask>

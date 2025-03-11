@@ -15,8 +15,8 @@ function CircularProgressWithLabel(props) {
             color: theme.palette.grey[800],
           }),
         })}
-        size={200}
-        thickness={4}
+        size={100}
+        thickness={5}
         value={100}
       />
       <CircularProgress
@@ -33,8 +33,8 @@ function CircularProgressWithLabel(props) {
             color: '#308fe8',
           }),
         })}
-        size={200}
-        thickness={4}
+        size={100}
+        thickness={5}
         value={props.value} // Ensure this is correctly passed
       />
 
@@ -55,7 +55,7 @@ function CircularProgressWithLabel(props) {
         <Typography
           variant="caption"
           component="div"
-          sx={{ color: 'text.secondary', fontSize: '50px' }}
+          sx={{ color: 'text.secondary', fontSize: '30px' }}
         >
           {`${Math.round(props.value)}%`}
         </Typography>

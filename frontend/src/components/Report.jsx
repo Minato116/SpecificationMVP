@@ -8,14 +8,15 @@ import {
   LinearScale
 } from 'chart.js';
 // import { Pie } from 'react-chartjs-2';
-import AnswerModal from './AnswerModal';
-import CircularWithValueLabel from './CircleChart';
+
+import PieAnimation from './PieChart';
+import GaugeChart from './GaugeChart';
 
 // Register required Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
 
 const Report = ({ score, totalQuestions, onRestart, categorizedResults, questions, clickAnswer, typeNum }) => {
-  const [showModal, setShowModal] = useState(false);
+  const [ setShowModal] = useState(false);
   const percentage = Math.round((score / totalQuestions) * 100);
   let resultMessage;
   if (percentage >= 90) {
@@ -80,26 +81,40 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
     };
   
   return (
-    <div className="print:hidden card text-center my-5">
-      <div className="card-header bg-primary text-white mb-5">
+    <div className="print:hidden card text-center m-0 border-0 shadow-0">
+      <div className="card-header bg-primary text-white mb-4">
         <h3 className="mb-0 p-2">Quiz Results</h3>
       </div>
-      <div className="card-body">
-        <div className="mb-4">
-          <CircularWithValueLabel score={percentage} />
+      <div className="card-body pb-5 shadow-0 border-0">
+        <div className="mb-4 ">        
+          {/* <CircularWithValueLabel score={percentage} /> */}
+          <div className='d-flex justify-content-center w-100'>
+          <GaugeChart value= {percentage} />
+          </div>
+          
           <p className="lead">You scored {score} out of {totalQuestions}</p>
         </div>
         <div className="card-text mb-4">{resultMessage}</div>
 
-        {/* Category Results */}
-        {categoryResults.length > 0 && (
-          <div className="mt-4">
-            <h5 className="mb-3">Performance by Category:</h5>
-            <ul className="list-group">
-              {categoryResults}
-            </ul>
-          </div>
-        )}
+        <div className="block d-lg-flex justify-content-around align-items-center w-100 p-5 gap-5">
+ 
+
+  {categoryResults.length > 0 && (
+    <div className='w-100'>
+      <h5 className="mb-3">Performance by Category:</h5>
+      <ul className="list-group d-flex gap-2">
+        {categoryResults}
+      </ul>
+    </div>
+  )}
+
+    <div className='w-100 mt-5'>
+      <PieAnimation itemNumber = {categoryResults.length} categoryResults = {categorizedResults} typeNum = {typeNum}/>
+    </div>
+ 
+</div>
+
+        
         <button className="btn btn-primary btn-lg mt-4" onClick={() => setShowModal(true)}>
           Save Report
         </button>
@@ -111,13 +126,13 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
         </button>
       </div>
 
-      <AnswerModal
+      {/* <AnswerModal
         show={showModal}
         onClose={() => setShowModal(false)}
         questions={questions}
         categorizedAnswers={categorizedAnswers}
         clickAnswer={clickAnswer}
-      />
+      /> */}
     </div>
   );
 };
