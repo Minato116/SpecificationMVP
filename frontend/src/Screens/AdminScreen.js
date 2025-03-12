@@ -4,6 +4,8 @@ import WaveEffect from "../components/WaveEffect";
 import { toast } from "react-toastify";
 import { setCredentials } from "../store/slices/authSlice";
 import { useUpdateUserMutation } from "../store/slices/usersApiSlice";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
 
 const AdminScreen = () => {
   const { userInfo } = useSelector((state) => state.auth);
@@ -92,6 +94,7 @@ const AdminScreen = () => {
 
   return (
     <>
+    <Header />
       <WaveEffect title={"Change Profile Information"} content={""} />
       <section className="section pt-1">
         <div className="container">
@@ -465,6 +468,7 @@ const AdminScreen = () => {
           </div>
         </div>
       </section>
+      <Footer />
     </>
   );
 };
