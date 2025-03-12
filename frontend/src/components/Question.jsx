@@ -5,7 +5,7 @@ const Question = ({ question, selectedOption, onSelectOption }) => {
 
   return (
     <div className="card mb-4">
-      <div className="card-body border border-primary" data-aos="zoom-out" data-aos-delay="300">      
+      <div className="card-body border border-primary" data-aos="zoom-out" data-aos-delay="300" data-aos-offset="00">      
         <div className="list-group">
           {question.content.map((content, index) => (
             <button

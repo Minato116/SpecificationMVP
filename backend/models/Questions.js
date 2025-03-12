@@ -11,6 +11,7 @@ const questionShema = new Schema({
     type:{type:String},
     reason:{type:String},
     question_type:{type:Number},
+    question_image:{type:String},
 })
 
 const Question = mongoose.model("Question", questionShema);
