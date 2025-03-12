@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+// import React, { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -7,7 +7,6 @@ import {
   CategoryScale,
   LinearScale
 } from 'chart.js';
-// import { Pie } from 'react-chartjs-2';
 
 import PieAnimation from './PieChart';
 import GaugeChart from './GaugeChart';
@@ -17,7 +16,7 @@ import { useSelector } from 'react-redux';
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
 
 const Report = ({ score, totalQuestions, onRestart, categorizedResults, questions, clickAnswer, typeNum }) => {
-  const [ setShowModal] = useState(false);
+  // const [ setShowModal] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
   
   const percentage = Math.round((score / totalQuestions) * 100);

@@ -19,6 +19,7 @@ import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
 import Profile from "./Screens/Profile";
 import QuizScreen from "./Screens/QuizScreen";
+import AdminScreen from "./Screens/AdminScreen";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
         <Route path="/create" element={<CreateProject />} /> */}
       </Route>
       <Route path="" element={<AdminRoute />}>
+      <Route path='/admin' element={<AdminScreen />} />
 
       </Route>
     </Route>
