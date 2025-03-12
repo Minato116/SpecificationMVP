@@ -83,11 +83,6 @@ const Header = () => {
                   <i className="fa fa-home mx-1" /> Home
                 </Link>
               </li>
-              {/* <li className="nav-item">
-                <Link className="nav-link scrollto" to="/metodology">
-                  <i className="fa-solid fa-edit mx-1" /> Collect
-                </Link>
-              </li> */}
               <li className="nav-item">
                 <Link className="nav-link scrollto" to="/profile">
                   <i className="fas fa-user mx-1" /> Profile
@@ -98,8 +93,8 @@ const Header = () => {
                   <i className="fa fa-line-chart mx-1" />
                   Results
                 </Link>
-              </li>
-              <li className="nav-item">
+              </li> */}
+              {/* <li className="nav-item">
                 <a
                   className="nav-link btn btn-outline-secondary px-4 mx-4"
                   href="#contact"
@@ -112,9 +107,9 @@ const Header = () => {
                   {userInfo.isAdmin === true ? (
                     <>
                       <li className="nav-item">
-                        <Link to="/" className="nav-link scrollto">
-                          <i className="fa fa-gear fa-2x fa-spin mx-2" />
-                          Admin Profile
+                        <Link to="/admin" className="nav-link scrollto">
+                          <i className="fa fa-users fa-2x fa-solid mx-2" />
+                          Admin 
                         </Link>
                       </li>
                       <li className="nav-item">
