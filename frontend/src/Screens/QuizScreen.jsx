@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Report from '../components/Report';
-// import { getQuestions, submitQuiz } from '../services/api';
 import Question from '../components/Question';
-// import questionnaire from '../questionnaire';
 import WaveEffect from '../components/WaveEffect';
 
 const QuizScreen = () => {
@@ -39,10 +37,9 @@ const QuizScreen = () => {
         };
 
         fetchQuestions();
-        // setQuestions(questionnaire);
         setIsLoading(false);
     }, []);
-    // console.log("question, option", selectedOptions)
+
     const handleSelectOption = (option) => {
         setSelectedOptions({
             ...selectedOptions,
@@ -113,13 +110,13 @@ const QuizScreen = () => {
     }
 
     if (quizCompleted && results) {    
-        // questionNum();  
-        return <Report score={results.score} questions={questions} totalQuestions={results.totalQuestions} onRestart={restartQuiz} categorizedResults={results.categorizedResults} clickAnswer={selectedOptions} typeNum ={typeNum}  />;
+         return <Report score={results.score} questions={questions} totalQuestions={results.totalQuestions} onRestart={restartQuiz} categorizedResults={results.categorizedResults} clickAnswer={selectedOptions} typeNum ={typeNum}  />;
     }
 
     const progress = ((currentQuestionIndex+1) / questions.length) * 100;
     const currentQuestion = questions[currentQuestionIndex];
     const selectedOption = selectedOptions[currentQuestionIndex];
+    const questionImage = questions[currentQuestionIndex]?questions[currentQuestionIndex].question_image:undefined;
 
     return (
         <>
@@ -132,13 +129,16 @@ const QuizScreen = () => {
                 <div className="row justify-content-center">
                     <div className="col-md-10">
                         <div className="quiz-container">
-                            <div className="mb-4">
-                                {/* <h4 className="mb-2">Online Assessment</h4> */}
+                            <div className="mb-4">                                
                                 <div className="progress" style={{ height: "35px" }} data-aos="zoom-out" data-aos-delay="100">
                                     <div className="progress-bar progress-bar-striped progress-bar-animated fs-4 fw-semibold" role="progressbar" style={{ width: `${progress}%` }} aria-valuenow={progress} aria-valuemin="0" aria-valuemax="100">                                        
                                     </div>                                    
                                 </div>
                                 <div className='!important absolute !important top-[-20px] text-center text-black'>{`${Math.round(progress)}%`}</div>
+                                <div className='w-100 flex px-8'>
+                                    {<img src={questionImage} alt='question' className='w-100'></img>}                                  
+                                </div>
+                                {console.log(questionImage)}
                                 <div className=" text-muted mt-2" data-aos="zoom-in" data-aos-delay="200">
                                     Question {currentQuestionIndex + 1} of {questions.length}
                                 </div>
