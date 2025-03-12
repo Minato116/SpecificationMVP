@@ -14,7 +14,7 @@ if (!type ){
 
     try{
         const newReport = new Reports({
-            fullName: `${data.first || ""} ${data.middleName || ""} ${data.lastName || ""}`.trim(),
+            fullName: `${data.firstName || ""} ${data.middleName || ""} ${data.lastName || ""}`.trim(),
             emailAddress: data.emailAddress,
             gender: data.gender,
             education: data.education,
