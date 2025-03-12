@@ -1,9 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip,
+  Legend,
+  CategoryScale,
+  LinearScale
+} from 'chart.js';
+// import { Pie } from 'react-chartjs-2';
+
 import PieAnimation from './PieChart';
 import GaugeChart from './GaugeChart';
+import { useSelector } from 'react-redux';
+
+// Register required Chart.js components
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
 
 const Report = ({ score, totalQuestions, onRestart, categorizedResults, questions, clickAnswer, typeNum }) => {
   const [ setShowModal] = useState(false);
+  const { userInfo } = useSelector((state) => state.auth);
+  
   const percentage = Math.round((score / totalQuestions) * 100);
   let resultMessage;
   if (percentage >= 90) {
@@ -16,6 +32,40 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
     resultMessage = "You might want to review the material and try again.";
   }
 
+
+  const generateReport = async () => {
+    const percentage = Object.entries(categorizedResults).map(([type, correct], index) => {
+          let typeResult;
+          typeNum.forEach((val, ind) => {
+            if (type === val._id) {
+              typeResult = Math.floor((Number(correct) / Number(val.count) * 100));
+            }
+          });        
+          return typeResult          
+        }) 
+    const report = {
+      data: {
+        firstName: userInfo.firstName,
+      middleName: userInfo.middleName,
+      lastName: userInfo.lastName,
+      emailAddress: userInfo.email,
+      gender: userInfo.gender,
+      education: userInfo.education,
+      employmentDetails: userInfo.employmentDetails,
+      score: score,
+      type: Object.keys(categorizedResults),
+      percentage: percentage,
+      totalQuestions:totalQuestions
+      }, 
+    }
+console.log(totalQuestions);
+    const res = await fetch('/api/reports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },  
+      body: JSON.stringify(report),
+    })
+  }
+
   // Generate category-specific results
   const categoryResults = categorizedResults
     ? Object.entries(categorizedResults).map(([type, correct], index) => {
@@ -25,7 +75,7 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
           typeResult = Math.floor((Number(correct) / Number(val.count) * 100));
         }
       });
-
+      // console.log(Object.keys(categorizedResults),"asfasfasfasf");
       let typeResultMessage = "";
       if (typeResult >= 90) {
         typeResultMessage = "Top";
@@ -102,7 +152,7 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
 </div>
 
         
-        <button className="btn btn-primary btn-lg mt-4" onClick={() => setShowModal(true)}>
+        <button className="btn btn-primary btn-lg mt-4" onClick={generateReport}>
           Save Report
         </button>
         <button className="btn btn-primary btn-lg mt-4 ms-3" onClick={onRestart}>
