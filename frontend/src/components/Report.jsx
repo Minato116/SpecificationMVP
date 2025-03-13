@@ -54,7 +54,8 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
       score: score,
       type: Object.keys(categorizedResults),
       percentage: percentage,
-      totalQuestions:totalQuestions
+      totalQuestions:totalQuestions,
+      keySkills: userInfo.keySkills
       }, 
     }
 console.log(totalQuestions);

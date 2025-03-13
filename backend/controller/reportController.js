@@ -21,7 +21,8 @@ if (!type ){
             employmentDetails : data.employmentDetails,
             score:Math.floor((data.score/data.totalQuestions)*100),
             type:data.type,
-            percentage:data.percentage
+            percentage:data.percentage,
+            keySkills: data.keySkills
         });
 
         await newReport.save();

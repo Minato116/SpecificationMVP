@@ -27,6 +27,9 @@ const authUser = asyncHandler(async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       isAdmin: user.isAdmin,
+      gender:user.gender,
+      education:user.education,
+      keySkills:user.keySkills
     });
   } else {
     res.status(401);
@@ -164,6 +167,9 @@ const registerUser = asyncHandler(async (req, res) => {
           lastName: user.lastName,
           email: user.email,
           isAdmin: user.isAdmin,
+          gender: user.gender,
+          education:user.education,
+          keySkills:user.keySkills
       });
   } else {
       res.status(400);
