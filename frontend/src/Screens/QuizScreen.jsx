@@ -136,7 +136,7 @@ const QuizScreen = () => {
                                 </div>
                                 <div className='!important absolute !important top-[-20px] text-center text-black'>{`${Math.round(progress)}%`}</div>
                                 <div className='w-100 flex px-8'>
-                                    {<img src={questionImage} alt='question' className='w-100'></img>}                                  
+                                    {questionImage?<img src={questionImage} alt='question' className='w-100'></img>:""}                                  
                                 </div>                    
                                 <div className=" text-muted mt-2" data-aos="zoom-in" data-aos-delay="200">
                                     Question {currentQuestionIndex + 1} of {questions.length}
