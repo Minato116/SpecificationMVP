@@ -113,10 +113,10 @@ const QuizScreen = () => {
          return <Report score={results.score} questions={questions} totalQuestions={results.totalQuestions} onRestart={restartQuiz} categorizedResults={results.categorizedResults} clickAnswer={selectedOptions} typeNum ={typeNum}  />;
     }
 
-    const progress = ((currentQuestionIndex+1) / questions.length) * 100;
-    const currentQuestion = questions[currentQuestionIndex];
+    const progress = questions?((currentQuestionIndex+1) / questions.length) * 100:0;
+    const currentQuestion = questions?questions[currentQuestionIndex]:"";
     const selectedOption = selectedOptions[currentQuestionIndex];
-    const questionImage = questions[currentQuestionIndex]?questions[currentQuestionIndex].question_image:undefined;
+    const questionImage = currentQuestion?questions[currentQuestionIndex].question_image:undefined;
 
     return (
         <>
@@ -139,7 +139,7 @@ const QuizScreen = () => {
                                     {questionImage?<img src={questionImage} alt='question' className='w-100'></img>:""}                                  
                                 </div>                    
                                 <div className=" text-muted mt-2" data-aos="zoom-in" data-aos-delay="200">
-                                    Question {currentQuestionIndex + 1} of {questions.length}
+                                    Question {currentQuestionIndex + 1} of {questions?(questions.length):0}
                                 </div>
                             </div>
 
@@ -167,7 +167,7 @@ const QuizScreen = () => {
                                     disabled={!selectedOption}
                                     data-aos="fade-right" data-aos-delay="400"
                                 >
-                                    {currentQuestionIndex < questions.length - 1 ? 'Next' : 'Submit Quiz'}
+                                    {questions?(currentQuestionIndex < questions.length - 1 ? 'Next' : 'Submit Quiz'):'Next'}
                                 </button>
                             </div>
                         </div>
