@@ -83,11 +83,7 @@ const Header = () => {
                   <i className="fa fa-home mx-1" /> Home
                 </Link>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link scrollto" to="/profile">
-                  <i className="fas fa-user mx-1" /> Profile
-                </Link>
-              </li>
+              
               {/* <li className="nav-item">
                 <Link className="nav-link scrollto" to="/">
                   <i className="fa fa-line-chart mx-1" />
@@ -104,6 +100,11 @@ const Header = () => {
               </li> */}
               {userInfo ? (
                 <>
+                <li className="nav-item">
+                <Link className="nav-link scrollto" to="/profile">
+                  <i className="fas fa-user mx-1" /> Profile
+                </Link>
+              </li>
                   {userInfo.isAdmin === true ? (
                     <>
                       <li className="nav-item">

@@ -35,7 +35,7 @@ export default function PieAnimation(props) {
             innerRadius: 40,
             outerRadius: 150,
             cornerRadius: 5,
-            arcLabel: (params) => `${params.label}`,
+            // arcLabel: (params) => `${params.label}`,
             arcLabelMinAngle: 10,
             highlightScope: { faded: 'global', highlighted: 'item' },
             faded: { additionalRadius: 0 },

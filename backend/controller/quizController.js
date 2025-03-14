@@ -1,5 +1,5 @@
-import Question from '../models/QuestionTest.js';
-// import Question from '../models/Questions.js';
+// import Question from '../models/QuestionTest.js';
+import Question from '../models/Questions.js';
 import asyncHandler from '../middleware/asyncHandler.js'
 
 export const getAllQuiz = asyncHandler(async (req, res) => {

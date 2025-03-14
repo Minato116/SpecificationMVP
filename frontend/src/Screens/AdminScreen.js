@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
@@ -20,175 +20,168 @@ import {
 import { Delete, Edit, Add } from "@mui/icons-material";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import WaveEffect from "../components/WaveEffect";
 
-
-
-const categories = [
-  { type: "A", percentage: 23 },
-  { type: "B", percentage: 34 },
-  { type: "C", percentage: 45 },
-];
-
-
-const initialUsers = [
-  {
-    id: 1,
-    fullName: "John Doe",
-    email: "john@example.com",
-    gender: "Male",
-    education: "Bachelor's",
-    employment: "Engineer",
-    score: 85,
-    category: categories[0],
-    isAdmin: "true",
-  },
-];
+const fetchUsers = async () => {
+  try {
+    const res = await fetch('/api/admin');
+    if (!res.ok) throw new Error("Failed to fetch users");
+    const data = await res.json();
+    return data.data;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
 
 export default function UserManagement() {
-
-  const [users, setUsers] = useState(initialUsers);
-  const [usersData, setUsersData] = useState(users);
+  const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
-  const [filterField, setFilterField] = useState("id");
+  const [filterField, setFilterField] = useState("fullName");
   const [modalData, setModalData] = useState(null);
-
-  const handleDelete = (id) => {
-    setUsers(users.filter((user) => user.id !== id));
-  };
-
-  const handleSave = (user) => {
-    if (user.id) {
-      setUsers(users.map((u) => (u.id === user.id ? user : u)));
-    } else {
-      setUsers([...users, { ...user, id: users.length + 1 }]);
+  useEffect(() => {
+    fetchUsers().then(setUsers);
+  }, []);
+  
+  // ✅ CREATE & UPDATE USER
+  const handleSave = async (user) => {
+    try {
+      let res;
+      let updatedUser;
+  
+      if (user._id) {
+        // Update existing user
+        res = await fetch(`/api/admin/${user._id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(user),
+        });
+        updatedUser = await res.json();
+        setUsers(users.map((u) => (u._id === user._id ? updatedUser.data : u)));
+      } 
+      // else {
+      //   // Add new user
+      //   res = await fetch("/api/admin", {
+      //     method: "POST",
+      //     headers: { "Content-Type": "application/json" },
+      //     body: JSON.stringify(user),
+      //   });
+      //   updatedUser = await res.json();
+      //   if (updatedUser.success) {
+      //     setUsers([...users, { ...user, _id: updatedUser._id }]);
+      //   }
+      // }
+      setModalData(null);
+    } catch (error) {
+      console.error("Error saving user:", error);
     }
-    setModalData(null);
   };
+  
+  // ✅ DELETE USER
+  const handleDelete = async (id) => {
+    try {
+      const res = await fetch(`/api/admin/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        setUsers(users.filter((user) => user._id !== id));
+      }
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
+  
 
   const filteredUsers = users.filter((user) => {
-    const fieldValue = user[filterField];
-    return fieldValue !== undefined && fieldValue.toString().toLowerCase().includes(search.toLowerCase());
+    const fieldValue = user[filterField]?.toString().toLowerCase() || "";
+    return fieldValue.includes(search.toLowerCase());
   });
 
   function UserModal({ user, onSave, onClose }) {
-    const [formData, setFormData] = useState(user);
+    const [formData, setFormData] = useState({
+      _id: user?._id || null,
+      fullName: user?.fullName || "",
+      emailAddress: user?.emailAddress || "",
+      gender: user?.gender || "",
+      education: user?.education || "",
+      score: user?.score || "",
+      type: user?.type || [],
+      percentage: user?.percentage || [],
+      isAdmin: user?.isAdmin || false,
+    });
+
+    useEffect(() => {
+      setFormData({
+        _id: user?._id || null,
+        fullName: user?.fullName || "",
+        emailAddress: user?.emailAddress || "",
+        gender: user?.gender || "",
+        education: user?.education || "",
+        score: user?.score || "",
+        type: user?.type || [],
+        percentage: user?.percentage || [],
+        isAdmin: user?.isAdmin || false,
+      });
+    }, [user]);
 
     const handleChange = (e) => {
       const { name, value } = e.target;
-      setFormData({ ...formData, [name]: value });
-    };
-
-    const handleCategoryChange = (e) => {
-      setFormData({ ...formData, category: categories.find(cat => cat.type === e.target.value) });
+      setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     return (
       <Dialog open={Boolean(user)} onClose={onClose}>
-        <DialogTitle>{user.id ? "Edit User" : "Add User"}</DialogTitle>
+        <DialogTitle>{user?._id ? "Edit User" : "Add User"}</DialogTitle>
         <DialogContent>
-          <TextField
-            label="Full Name"
-            name="fullName"
-            fullWidth
-            margin="dense"
-            value={formData.fullName}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Email"
-            name="email"
-            fullWidth
-            margin="dense"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Gender"
-            name="gender"
-            fullWidth
-            margin="dense"
-            value={formData.gender}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Education"
-            name="education"
-            fullWidth
-            margin="dense"
-            value={formData.education}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Score"
-            name="score"
-            fullWidth
-            margin="dense"
-            value={formData.score}
-            onChange={handleChange}
-          />
-          <Select
-            fullWidth
-            margin="dense"
-            value={formData.category.type}
-            onChange={handleCategoryChange}
-          >
-            {categories.map((cat) => (
-              <MenuItem key={cat.type} value={cat.type}>
-                {`${cat.type} (${cat.percentage}%)`}
-              </MenuItem>
-            ))}
-          </Select>
-          <TextField
-            label="IsAdmin"
-            name="isAdmin"
-            fullWidth
-            margin="dense"
-            value={formData.isAdmin}
-            onChange={handleChange}
-          />
-
+          <TextField label="Full Name" name="fullName" fullWidth margin="dense" value={formData.fullName} onChange={handleChange} />
+          <TextField label="Email" name="emailAddress" fullWidth margin="dense" value={formData.emailAddress} onChange={handleChange} />
+          <TextField label="Gender" name="gender" fullWidth margin="dense" value={formData.gender} onChange={handleChange} />
+          <TextField label="Education" name="education" fullWidth margin="dense" value={formData.education} onChange={handleChange} />
+          <TextField label="Score" name="score" fullWidth margin="dense" value={formData.score} onChange={handleChange} />
+          {/* <Select fullWidth margin="dense" value={formData.type?.[0] || ""}>
+            {formData.type.length > 0 ? (
+              formData.type.map((type, index) => (
+                <MenuItem key={type} value={type}>
+                  {`${type} (${formData.percentage?.[index] || 0}%)`}
+                </MenuItem>
+              ))
+            ) : (
+              <MenuItem disabled>No data available</MenuItem>
+            )}
+          </Select> */}
+          <TextField label="Is Admin" name="isAdmin" fullWidth margin="dense" value={formData.isAdmin} onChange={handleChange} />
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={() => onSave(formData)} variant="contained">
-            Save
-          </Button>
+          <Button onClick={() => onSave(formData)} variant="contained">Save</Button>
         </DialogActions>
       </Dialog>
     );
   }
 
-
   return (
     <>
       <Header />
-      <div style={{ padding: 40, border: "none", outline: "none" }}>
-        <Card style={{ border: "none", outline: "none" }}>
-          <CardContent style={{ float: "right", display: "flex", gap: 10, alignItems: "center", border: "none", outline: "none" }}>
+      <WaveEffect title={"Reports Management"} content={""} />
+      <div style={{ padding: 40 }}>
+        <Card>        
+          <CardContent style={{ float: "right", display: "flex", gap: 10, alignItems: "center" }}>        
             <Select value={filterField} onChange={(e) => setFilterField(e.target.value)}>
-              <MenuItem value="id">ID</MenuItem>
-              <MenuItem value="fullName">Full Name</MenuItem>
-              <MenuItem value="email">Email</MenuItem>
+            <MenuItem value="fullName">Full Name</MenuItem>
+              <MenuItem value="emailAddress">Email</MenuItem>
               <MenuItem value="gender">Gender</MenuItem>
               <MenuItem value="education">Education</MenuItem>
-              <MenuItem value="employment">Employment</MenuItem>
+              <MenuItem value="employmentDetails">Employment</MenuItem>
               <MenuItem value="score">Score</MenuItem>
               <MenuItem value="isAdmin">IsAdmin</MenuItem>
             </Select>
-            <TextField
-              label="Search"
-              variant="outlined"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-
+            <TextField label="Search" variant="outlined" value={search} onChange={(e) => setSearch(e.target.value)} />
           </CardContent>
         </Card>
 
         <Table style={{ marginTop: 20 }}>
           <TableHead>
             <TableRow>
-              <TableCell>ID</TableCell>
+            <TableCell>ID</TableCell>
               <TableCell>Full Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Gender</TableCell>
@@ -197,50 +190,45 @@ export default function UserManagement() {
               <TableCell>Score</TableCell>
               <TableCell>Category</TableCell>
               <TableCell>IsAdmin</TableCell>
+              <TableCell></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredUsers.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.id}</TableCell>
+            {filteredUsers.map((user, index) => (
+              <TableRow key={user._id}>
+              <TableCell>{index + 1}</TableCell>
                 <TableCell>{user.fullName}</TableCell>
-                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.emailAddress}</TableCell>
                 <TableCell>{user.gender}</TableCell>
                 <TableCell>{user.education}</TableCell>
-                <TableCell>{user.employment}</TableCell>
+                <TableCell>{user.employmentDetails}</TableCell>
                 <TableCell>{user.score}</TableCell>
                 <TableCell>
-                  <FormControl sx={{ m: 0, minWidth: 120, border: "none", outline: "none" }}>
+                  <FormControl sx={{ m: 0, minWidth: 120 }}>
                     <Select
                       fullWidth
-
-                      value={user.category.type}
-                      sx={{ border: "none" }}
-                    >
-                      {categories.map((cat) => (
-                        <MenuItem key={cat.type} value={cat.type}>
-                          {`${cat.type} (${cat.percentage}%)`}
+                      value={user.type[0]||""}                      
+                    >                   
+                      {user.type.map((type, index) => (
+                        <MenuItem key={type} value={type} >
+                          {type} ({user.percentage[index]}%)
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
                 </TableCell>
-                <TableCell>{user.isAdmin}</TableCell>
+                <TableCell>{user.isAdmin === "true"? "Yes" : "No"}</TableCell>
                 <TableCell>
                   <Button onClick={() => setModalData(user)}><Edit /></Button>
-                  <Button onClick={() => handleDelete(user.id)} color="error"><Delete /></Button>
+                  <Button onClick={() => handleDelete(user._id)} color="error"><Delete /></Button>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
 
-        {modalData !== null && (
-          <UserModal user={modalData} onSave={handleSave} onClose={() => setModalData(null)} />
-        )}
-        <Button style={{ color: "gray", width: "100%" }} onClick={() => setModalData({ category: categories[0] })}>
-          <Add />
-        </Button>
+        {modalData && <UserModal user={modalData} onSave={handleSave} onClose={() => setModalData(null)} />}
+        {/* <Button onClick={() => setModalData({})}><Add /></Button> */}
       </div>
       <Footer />
     </>

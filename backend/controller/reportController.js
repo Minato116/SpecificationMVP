@@ -2,15 +2,11 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Reports from "../models/Reports.js";
 
 export const createReportData = asyncHandler(async (req, res) => {
-    const { data } = req.body; // Expecting type and answers array
-
-    // const object = await JSON.parse(data);//
-   
+    const { data } = req.body; // Expecting type and answers array  
     const { type } = data;
 if (!type ){
         return res.status(400).json({ message: "❌ Missing or invalid required fields" });
     }
-
 
     try{
         const newReport = new Reports({
@@ -22,7 +18,7 @@ if (!type ){
             score:Math.floor((data.score/data.totalQuestions)*100),
             type:data.type,
             percentage:data.percentage,
-            keySkills: data.keySkills
+            isAdmin:data.isAdmin,
         });
 
         await newReport.save();

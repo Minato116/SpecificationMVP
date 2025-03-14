@@ -34,8 +34,8 @@ const reportsSchema = new Schema({
         type: Array,
         required: true
     },
-    keySkills:{
-        type:String
+    isAdmin: {
+        type: String
     }
 
 })

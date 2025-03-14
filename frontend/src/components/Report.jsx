@@ -1,4 +1,4 @@
-// import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -11,6 +11,7 @@ import {
 import PieAnimation from './PieChart';
 import GaugeChart from './GaugeChart';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // Register required Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
@@ -18,7 +19,7 @@ ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
 const Report = ({ score, totalQuestions, onRestart, categorizedResults, questions, clickAnswer, typeNum }) => {
   // const [ setShowModal] = useState(false);
   const { userInfo } = useSelector((state) => state.auth);
-  
+
   const percentage = Math.round((score / totalQuestions) * 100);
   let resultMessage;
   if (percentage >= 90) {
@@ -30,40 +31,43 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
   } else {
     resultMessage = "You might want to review the material and try again.";
   }
-
+  const navigate = useNavigate();
 
   const generateReport = async () => {
+
     const percentage = Object.entries(categorizedResults).map(([type, correct], index) => {
-          let typeResult;
-          typeNum.forEach((val, ind) => {
-            if (type === val._id) {
-              typeResult = Math.floor((Number(correct) / Number(val.count) * 100));
-            }
-          });        
-          return typeResult          
-        }) 
+      let typeResult;
+      typeNum.forEach((val, ind) => {
+        if (type === val._id) {
+          typeResult = Math.floor((Number(correct) / Number(val.count) * 100));
+        }
+      });
+      return typeResult
+    })
     const report = {
       data: {
         firstName: userInfo.firstName,
-      middleName: userInfo.middleName,
-      lastName: userInfo.lastName,
-      emailAddress: userInfo.email,
-      gender: userInfo.gender,
-      education: userInfo.education,
-      employmentDetails: userInfo.employmentDetails,
-      score: score,
-      type: Object.keys(categorizedResults),
-      percentage: percentage,
-      totalQuestions:totalQuestions,
-      keySkills: userInfo.keySkills
-      }, 
+        middleName: userInfo.middleName,
+        lastName: userInfo.lastName,
+        emailAddress: userInfo.email,
+        gender: userInfo.gender,
+        education: userInfo.education,
+        employmentDetails: userInfo.employmentDetails,
+        score: score,
+        type: Object.keys(categorizedResults),
+        percentage: percentage,
+        totalQuestions: totalQuestions,
+        isAdmin: userInfo.isAdmin,
+      },
     }
-console.log(totalQuestions);
-    const res = await fetch('/api/reports', {
+
+    await fetch('/api/reports', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },  
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(report),
     })
+    await alert("Successfully reported!");
+    navigate('/');
   }
 
   // Generate category-specific results
@@ -112,46 +116,44 @@ console.log(totalQuestions);
   }, {});
 
 
-    const handlePrint =  () => {
-       window.scrollTo({top:0, behavior: 'smooth'});
-       window.print(); // This triggers the browser's print function
-    };
-  
+  const handlePrint = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.print(); // This triggers the browser's print function
+  };
+
   return (
     <div className="print:hidden card text-center m-0 border-0 shadow-0">
       <div className="card-header bg-primary text-white mb-4">
         <h3 className="mb-0 p-2">Quiz Results</h3>
       </div>
       <div className="card-body pb-5 shadow-0 border-0">
-        <div className="mb-4 ">        
+        <div className="mb-4 ">
           {/* <CircularWithValueLabel score={percentage} /> */}
           <div className='d-flex justify-content-center w-100'>
-          <GaugeChart value= {percentage} />
+            <GaugeChart value={percentage} />
           </div>
-          
+
           <p className="lead">You scored {score} out of {totalQuestions}</p>
         </div>
         <div className="card-text mb-4">{resultMessage}</div>
 
         <div className="block d-lg-flex justify-content-around align-items-center w-100 p-5 gap-5">
- 
 
-  {categoryResults.length > 0 && (
-    <div className='w-100'>
-      <h5 className="mb-3">Performance by Category:</h5>
-      <ul className="list-group d-flex gap-2">
-        {categoryResults}
-      </ul>
-    </div>
-  )}
 
-    <div className='w-100 mt-5'>
-      <PieAnimation itemNumber = {categoryResults.length} categoryResults = {categorizedResults} typeNum = {typeNum}/>
-    </div>
- 
-</div>
+          {categoryResults.length > 0 && (
+            <div className='w-100'>
+              <h5 className="mb-3">Performance by Category:</h5>
+              <ul className="list-group d-flex gap-2">
+                {categoryResults}
+              </ul>
+            </div>
+          )}
 
-        
+          <div className='w-100 mt-5'>
+            <PieAnimation itemNumber={categoryResults.length} categoryResults={categorizedResults} typeNum={typeNum} />
+          </div>
+
+        </div>
         <button className="btn btn-primary btn-lg mt-4" onClick={generateReport}>
           Save Report
         </button>

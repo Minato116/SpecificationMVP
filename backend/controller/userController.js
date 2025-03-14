@@ -27,9 +27,9 @@ const authUser = asyncHandler(async (req, res) => {
       lastName: user.lastName,
       email: user.email,
       isAdmin: user.isAdmin,
-      gender:user.gender,
-      education:user.education,
-      keySkills:user.keySkills
+      education: user.education,
+      employmentDetails: user.employmentDetails,
+      gender: user.gender,
     });
   } else {
     res.status(401);
@@ -121,59 +121,59 @@ const updateAdmin = asyncHandler(async (req, res) => {
 // @Access Public
 const registerUser = asyncHandler(async (req, res) => {
   const {
-      firstName,
-      middleName,
-      lastName,
-      email,
-      password,
-      gender,
-      dateOfBirth,
-      preferredLanguage,
-      employmentDetails,
-      dateOfJoining,
-      keySkills,
-      education,
-      certifications
+    firstName,
+    middleName,
+    lastName,
+    email,
+    password,
+    gender,
+    dateOfBirth,
+    preferredLanguage,
+    employmentDetails,
+    dateOfJoining,
+    keySkills,
+    education,
+    certifications
   } = req.body;
 
   const userExist = await User.findOne({ email });
 
   if (userExist) {
-      res.status(400);
-      throw new Error("User Already Exists");
+    res.status(400);
+    throw new Error("User Already Exists");
   }
 
   const user = await User.create({
-      firstName,
-      middleName,
-      lastName,
-      email,
-      password,
-      gender,
-      dateOfBirth,
-      preferredLanguage,
-      employmentDetails,
-      dateOfJoining,
-      keySkills,
-      education,
-      certifications
+    firstName,
+    middleName,
+    lastName,
+    email,
+    password,
+    gender,
+    dateOfBirth,
+    preferredLanguage,
+    employmentDetails,
+    dateOfJoining,
+    keySkills,
+    education,
+    certifications
   });
 
   if (user) {
-      generateToken(res, user._id);
-      res.json({
-          firstName: user.firstName,
-          middleName: user.middleName,
-          lastName: user.lastName,
-          email: user.email,
-          isAdmin: user.isAdmin,
-          gender: user.gender,
-          education:user.education,
-          keySkills:user.keySkills
-      });
+    generateToken(res, user._id);
+    res.json({
+      firstName: user.firstName,
+      middleName: user.middleName,
+      lastName: user.lastName,
+      email: user.email,
+      isAdmin: user.isAdmin,
+      education: user.education,
+      employmentDetails: user.employmentDetails,
+      gender: user.gender,
+    });
   } else {
-      res.status(400);
-      throw new Error("Invalid User Data");
+    res.status(400);
+    throw new Error("Invalid User Data");
   }
 });
 
@@ -202,48 +202,48 @@ const logoutUser = asyncHandler(async (req, res) => {
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id);
+  const user = await User.findById(req.params.id);
 
-    if (user) {
-        user.firstName = req.body.firstName || user.firstName;
-        user.middleName = req.body.middleName || user.middleName;
-        user.lastName = req.body.lastName || user.lastName;
-        user.email = req.body.email || user.email;
-        user.gender = req.body.gender || user.gender;
-        user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
-        user.preferredLanguage = req.body.preferredLanguage || user.preferredLanguage;
-        user.employmentDetails = req.body.employmentDetails || user.employmentDetails;
-        user.dateOfJoining = req.body.dateOfJoining || user.dateOfJoining;
-        user.keySkills = req.body.keySkills || user.keySkills;
-        user.education = req.body.education || user.education;
-        user.certifications = req.body.certifications || user.certifications;
+  if (user) {
+    user.firstName = req.body.firstName || user.firstName;
+    user.middleName = req.body.middleName || user.middleName;
+    user.lastName = req.body.lastName || user.lastName;
+    user.email = req.body.email || user.email;
+    user.gender = req.body.gender || user.gender;
+    user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth;
+    user.preferredLanguage = req.body.preferredLanguage || user.preferredLanguage;
+    user.employmentDetails = req.body.employmentDetails || user.employmentDetails;
+    user.dateOfJoining = req.body.dateOfJoining || user.dateOfJoining;
+    user.keySkills = req.body.keySkills || user.keySkills;
+    user.education = req.body.education || user.education;
+    user.certifications = req.body.certifications || user.certifications;
 
-        if (req.body.password) {
-            user.password = req.body.password;
-        }
-
-        const updatedUser = await user.save();
-
-        res.json({
-            _id: updatedUser._id,
-            firstName: updatedUser.firstName,
-            middleName: updatedUser.middleName,
-            lastName: updatedUser.lastName,
-            email: updatedUser.email,
-            gender: updatedUser.gender,
-            dateOfBirth: updatedUser.dateOfBirth,
-            preferredLanguage: updatedUser.preferredLanguage,
-            employmentDetails: updatedUser.employmentDetails,
-            dateOfJoining: updatedUser.dateOfJoining,
-            keySkills: updatedUser.keySkills,
-            education: updatedUser.education,
-            certifications: updatedUser.certifications,
-            isAdmin: updatedUser.isAdmin,
-        });
-    } else {
-        res.status(404);
-        throw new Error('User not found');
+    if (req.body.password) {
+      user.password = req.body.password;
     }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      firstName: updatedUser.firstName,
+      middleName: updatedUser.middleName,
+      lastName: updatedUser.lastName,
+      email: updatedUser.email,
+      gender: updatedUser.gender,
+      dateOfBirth: updatedUser.dateOfBirth,
+      preferredLanguage: updatedUser.preferredLanguage,
+      employmentDetails: updatedUser.employmentDetails,
+      dateOfJoining: updatedUser.dateOfJoining,
+      keySkills: updatedUser.keySkills,
+      education: updatedUser.education,
+      certifications: updatedUser.certifications,
+      isAdmin: updatedUser.isAdmin,
+    });
+  } else {
+    res.status(404);
+    throw new Error('User not found');
+  }
 });
 
 // @desc Get user by ID

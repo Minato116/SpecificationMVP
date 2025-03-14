@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Gauge, gaugeClasses } from "@mui/x-charts/Gauge";
 import { animate } from "framer-motion";
 
