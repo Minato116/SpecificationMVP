@@ -1,4 +1,4 @@
-// import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Chart as ChartJS,
   ArcElement,
@@ -11,6 +11,7 @@ import {
 import PieAnimation from './PieChart';
 import GaugeChart from './GaugeChart';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // Register required Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
@@ -30,9 +31,10 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
   } else {
     resultMessage = "You might want to review the material and try again.";
   }
-
+const navigate = useNavigate();
 
   const generateReport = async () => {
+    
     const percentage = Object.entries(categorizedResults).map(([type, correct], index) => {
           let typeResult;
           typeNum.forEach((val, ind) => {
@@ -54,15 +56,18 @@ const Report = ({ score, totalQuestions, onRestart, categorizedResults, question
       score: score,
       type: Object.keys(categorizedResults),
       percentage: percentage,
-      totalQuestions:totalQuestions
+      totalQuestions:totalQuestions,
+      isAdmin: userInfo.isAdmin,
       }, 
     }
-console.log(totalQuestions);
-    const res = await fetch('/api/reports', {
+
+    await fetch('/api/reports', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },  
       body: JSON.stringify(report),
     })
+    await alert("Successfully reported!");
+    navigate('/');
   }
 
   // Generate category-specific results

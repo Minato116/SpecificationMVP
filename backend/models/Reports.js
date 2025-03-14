@@ -34,6 +34,9 @@ const reportsSchema = new Schema({
         type: Array,
         required: true
     },
+    isAdmin: {
+        type: String
+    }
 
 })
 
