@@ -1,0 +1,16 @@
+@media print {
+    *{
+        display: show;
+    }
+    .no-print {
+        display: none !important;
+    }
+    .tops{
+        position: absolute;
+        top:0px;
+        
+    }
+    .no-box{
+        box-shadow: none;
+    }
+}
