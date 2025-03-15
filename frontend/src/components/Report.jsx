@@ -12,6 +12,7 @@ import PieAnimation from './PieChart';
 import GaugeChart from './GaugeChart';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import '../Screens/index.css'
 
 // Register required Chart.js components
 ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale);
@@ -126,13 +127,13 @@ const Report = ({ score = 0, totalQuestions = 1, onRestart, categorizedResults =
     return acc;
   }, {});
 
-  const handlePrint = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const handlePrint = async () => {
+    await window.scrollTo({ top: 0, behavior: 'smooth' });
     window.print();
   };
 
   return (
-    <div className="print:hidden card text-center m-0 border-0 shadow-0">
+    <div className=" card text-center m-0 border-0 shadow-0">
       <div className="card-header bg-primary text-white mb-4">
         <h3 className="mb-0 p-2">Quiz Results</h3>
       </div>
@@ -159,7 +160,7 @@ const Report = ({ score = 0, totalQuestions = 1, onRestart, categorizedResults =
             <PieAnimation itemNumber={categoryResults.length} categoryResults={categorizedResults} typeNum={typeNum} />
           </div>
         </div>
-
+        <div className="no-print d-flex justify-content-center mt-4">
         <button className="btn btn-primary btn-lg mt-4" onClick={generateReport}>
           Save Report
         </button>
@@ -169,6 +170,7 @@ const Report = ({ score = 0, totalQuestions = 1, onRestart, categorizedResults =
         <button className="btn btn-primary btn-lg mt-4 ms-3" onClick={handlePrint}>
           Print
         </button>
+        </div>
       </div>
     </div>
   );

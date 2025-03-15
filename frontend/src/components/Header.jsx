@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logo from "../assets/images/favicon.png";
+import logo from "../assets/images/logo.png";
 import { useLogoutMutation } from "../store/slices/usersApiSlice";
 import { logout } from "../store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,10 +50,11 @@ const Header = () => {
         smooth
         component={<img src={arrow} alt="" />}
         style={{ background: "black" }}
+        className="no-print"
       />
 
       <nav
-        className={`navbar navbar-expand-lg sticky-top navbar-light text-white py-2 ${isSticky ? "navbar-sticky" : ""
+        className={`no-box tops navbar navbar-expand-lg sticky-top navbar-light text-white py-2 ${isSticky ? "navbar-sticky" : ""
           }`}
       >
         <div className="container">
@@ -61,12 +62,13 @@ const Header = () => {
             <img
               src={logo}
               alt=""
-              className="animated-rl border border-white bg-white"
+              className="animated-rl rounded-circle h-50"
+              style={{width:"60px"}}
             />
-            <span className="text-white align-self-center fw-bolder ms-2">CVFied</span>
+            {/* <span className="text-white align-self-center fw-bolder ms-2">CVFied</span> */}
           </Link>
           <button
-            className="navbar-toggler"
+            className="navbar-toggler no-print"
             type="button"
             data-bs-toggle="collapse"
             data-bs-target="#navbarNavDropdown"
@@ -76,7 +78,7 @@ const Header = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
+          <div className="collapse navbar-collapse no-print" id="navbarNavDropdown">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
                 <Link className="nav-link scrollto" aria-current="page" to="/">

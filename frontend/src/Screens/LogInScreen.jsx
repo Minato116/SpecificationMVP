@@ -6,7 +6,7 @@ import { useLoginMutation } from "../store/slices/usersApiSlice";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 import logo from "../assets/images/logo.jpg";
-import login_img from "../assets/images/login.jpg"
+import login_img from "../assets/images/logo.jpeg"
 
 const LogInScreen = () => {
   const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ const LogInScreen = () => {
 
   return (
     <>
-      <section className="vh-60" data-aos="zoom-in">
+      <section className="vh-60 bg-secondary" data-aos="zoom-in">
         <div className="container py-5 h-100" id="login">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col col-xl-10">
@@ -43,18 +43,18 @@ const LogInScreen = () => {
                     <img
                       src={login_img}
                       alt="login form"
-                      className="img-fluid"
+                      className="img-fluid h-100"
                       style={{borderRadius: "1rem 0 0 1rem"}}
                     />
                   </div>
                   <div className="col-md-6 col-lg-7 d-flex align-items-center">
-                    <div className="card-body p-4 p-lg-5 text-black">
+                    <div className="card-body p-4 p-lg-5 text-black ">
                       <form>
                         <div className="d-flex align-items-center mb-3 pb-1">                          
                           <span><img src={logo} alt="" className="animated" width="100" height="100" /></span>
                           <span className="h1 fw-bold mb-0 mx-5 text-secondary">  CVFied</span>
                         </div>
-                        <div data-mdb-input-init className="form-outline mb-4">
+                        <div data-mdb-input-init className="form-outline mb-4 ">
                           <input
                             type="email"
                             id="email"
