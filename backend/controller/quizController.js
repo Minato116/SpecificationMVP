@@ -1,11 +1,11 @@
-// import Question from '../models/QuestionTest.js';
-import Question from '../models/Questions.js';
+import Question from '../models/QuestionTest.js';
+// import Question from '../models/Questions.js';
 import asyncHandler from '../middleware/asyncHandler.js'
 
 export const getAllQuiz = asyncHandler(async (req, res) => {
 
   try {
-    const quiz = await Question.find();
+    const questions = await Question.find();
     const typeNum = await Question.aggregate([
       {
         $group: {
@@ -15,8 +15,12 @@ export const getAllQuiz = asyncHandler(async (req, res) => {
       }
     ]);
 
-    res.status(200).json({ data: quiz, typeNum: typeNum });
+    if (!questions || questions.length === 0) {
+      return res.status(404).json({ message: "No questions found." });
+    }
+
+    res.json({ data: questions, typeNum: typeNum }); // ✅ Ensure response is JSON
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ message: "Server error" }); // ✅ Proper error response
   }
 });

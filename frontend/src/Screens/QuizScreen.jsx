@@ -13,19 +13,37 @@ const QuizScreen = () => {
     const [results, setResults] = useState(null);
     const [typeNum, setTypeNum] = useState([]);
 
+    // const getQuestions = async () => {
+    //     const res = await fetch('/api/quiz');
+    
+    //     if (res.ok) {
+    //         const obj = await res.json();
+    //         console.log(obj); // Logging the parsed JSON
+    //         return obj;
+    //     } else {
+    //         return [];
+    //     }
+    // };
+    
+    
     const getQuestions = async () => {
-        const res = await fetch('/api/quiz');
-        if(res.ok){
-            const obj = await res.json();     
-            return obj;             
+        try {
+            const res = await fetch('http://localhost:5000/api/quiz'); // ✅ Use correct backend port
+            const text = await res.text(); // Read raw response
+     
+            return JSON.parse(text); // ✅ Convert to JSON
+        } catch (error) {
+            console.error("❌ Error fetching questions:", error);
+            return { data: [] }; // ✅ Prevent crash
         }
-        else return [];       
-    }
+    };
+    
+
 
     useEffect(() => {
         const fetchQuestions = async () => {
           try {
-            setIsLoading(true);
+            setIsLoading(true);            
             const data = await getQuestions();
             setQuestions(data.data);
             setTypeNum( data.typeNum);
@@ -122,7 +140,7 @@ const QuizScreen = () => {
         <>
             {
                 currentQuestion && (
-                    <WaveEffect title={currentQuestion.type} content={`Question ${currentQuestion.id} :  ${currentQuestion.question}`} />
+                    <WaveEffect title={`Question ${currentQuestion.id}` } content={`${currentQuestion.question}`} />
                 )
             }
             <div className="container my-3">

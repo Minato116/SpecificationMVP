@@ -17,7 +17,7 @@ import cors from 'cors';
 connectDB (); // MongoDB connect
 
 // const cors = require("cors");
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 5000;
 const app = express ();
 
 // Body parser middleware

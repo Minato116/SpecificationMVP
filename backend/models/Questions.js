@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const questionShema = new Schema({
+const questionSchema = new Schema({
     id:{type:Number},
     question:{type:String},
     content:{type:Array},
@@ -14,5 +14,5 @@ const questionShema = new Schema({
     question_image:{type:String},
 })
 
-const Question = mongoose.model("Question", questionShema);
+const Question = mongoose.model("Question", questionSchema);
 export default Question;

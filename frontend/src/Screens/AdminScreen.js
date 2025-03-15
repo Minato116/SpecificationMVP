@@ -24,7 +24,7 @@ import WaveEffect from "../components/WaveEffect";
 
 const fetchUsers = async () => {
   try {
-    const res = await fetch('/api/admin');
+    const res = await fetch('http://localhost:5000/api/admin');
     if (!res.ok) throw new Error("Failed to fetch users");
     const data = await res.json();
     return data.data;
@@ -39,48 +39,48 @@ export default function UserManagement() {
   const [search, setSearch] = useState("");
   const [filterField, setFilterField] = useState("fullName");
   const [modalData, setModalData] = useState(null);
+
   useEffect(() => {
-    fetchUsers().then(setUsers);
-  }, []);
+    fetchUsers().then((data) => setUsers(data || [])); // Ensure users is never undefined
+}, []);
   
-  // ✅ CREATE & UPDATE USER
-  const handleSave = async (user) => {
-    try {
-      let res;
-      let updatedUser;
-  
-      if (user._id) {
-        // Update existing user
-        res = await fetch(`/api/admin/${user._id}`, {
+const handleSave = async (user) => {
+  try {
+      const response = await fetch(`http://localhost:5000/api/admin/${user._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(user),
-        });
-        updatedUser = await res.json();
-        setUsers(users.map((u) => (u._id === user._id ? updatedUser.data : u)));
-      } 
-      // else {
-      //   // Add new user
-      //   res = await fetch("/api/admin", {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify(user),
-      //   });
-      //   updatedUser = await res.json();
-      //   if (updatedUser.success) {
-      //     setUsers([...users, { ...user, _id: updatedUser._id }]);
-      //   }
-      // }
-      setModalData(null);
-    } catch (error) {
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.message || "Failed to update user");
+
+      // ✅ Ensure the response contains the updated user data
+      if (!data.user) {
+          console.warn("API did not return updated user data. Fetching again...");
+          await fetchUsers().then(setUsers);
+      } else {
+          // ✅ Update state immediately
+          setUsers((prevUsers) =>
+              prevUsers.map((u) => (u._id === user._id ? data.user : u))
+          );
+      }
+
+      alert("User updated successfully!");
+
+  } catch (error) {
       console.error("Error saving user:", error);
-    }
-  };
+      alert(error.message || "Failed to update user");
+  }
+};
+
+
   
   // ✅ DELETE USER
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`/api/admin/${id}`, { method: "DELETE" });
+      const res = await fetch(`http://localhost:5000/api/admin/${id}`, { method: "DELETE" });
       const data = await res.json();
       if (data.success) {
         setUsers(users.filter((user) => user._id !== id));
@@ -152,7 +152,7 @@ export default function UserManagement() {
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose}>Cancel</Button>
-          <Button onClick={() => onSave(formData)} variant="contained">Save</Button>
+          <Button onClick={async () =>{ await onSave(formData);  onClose();}} variant="contained">Save</Button>
         </DialogActions>
       </Dialog>
     );

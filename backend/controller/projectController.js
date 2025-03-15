@@ -72,10 +72,6 @@ export const getProjects = asyncHandler (async (req, res) => {
     }
   });
 
- // @desc Fetch a product
-// @route api/products/:id
-// @access Public
-
 export const getProjectById = asyncHandler( async(req, res) => {
     const project = await Project.findById(req.params.id);
     console.log("pppp", project, req.params.id)
